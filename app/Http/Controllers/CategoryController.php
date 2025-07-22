@@ -91,4 +91,21 @@ class CategoryController extends Controller
 
         return redirect(route('category-management'))->with('success', 'Category deleted successfully.');
     }
+
+    public function delete($id)
+    {
+        $category = Category::find($id);
+
+        if (!$category) {
+            return redirect(route('category-management'))->with('error', 'Category not found.');
+        }
+
+        if (!$category->items->isEmpty()) {
+            return redirect(route('category-management'))->with('error', 'Category cannot be deleted because it is associated with one or more items.');
+        } else {
+            $category->delete();
+        }
+
+        return redirect(route('category-management'))->with('success', 'Category deleted successfully.');
+    }
 }
